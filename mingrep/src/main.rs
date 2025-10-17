@@ -1,6 +1,9 @@
 use std::env;
+use std::error::Error;
 use std::fs;
 use std::process;
+
+use mingrep::search;
 
 fn main() {
     let args : Vec<String> = env::args().collect();
@@ -13,12 +16,26 @@ fn main() {
     });
     println!("Searching for {}",data.title);
     println!("In file {}",data.file_path);
-    run(data);
+    if let Err(e) = run(data) {
+        println!("Application error: {e}");
+        process::exit(1);
+    }
 }
 
-fn run(input : Data){
-    let data = fs::read_to_string(input.file_path).expect("Should read the file");
-    println!("content: {}", data);
+// fn run(input : Data) -> Result<(), Box<dyn Error>> {
+//     let content = fs::read_to_string(input.file_path)?;
+//     println!("content: {}", content);
+//     Ok(())
+// }
+
+fn run(config: Data) -> Result<(), Box<dyn Error>> {
+    let contents = fs::read_to_string(config.file_path)?;
+
+    for line in search(&config.title, &contents) {
+        println!("{line}");
+    }
+
+    Ok(())
 }
 
 struct Data {
