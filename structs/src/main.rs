@@ -21,8 +21,6 @@ fn main() {
         return; 
     }
 
-    // 2. Parse the arguments (at index 1 and 2) from String to i16.
-    // .expect() will panic if the argument isn't a valid i16.
     let length: i16 = args[1].parse().expect("Length argument is not a valid i16");
     let width: i16 = args[2].parse().expect("Width argument is not a valid i16");
     let input: Rectangle = Rectangle{ length: length, width: width };
